@@ -1,11 +1,15 @@
 #include <iostream>
 #include <string.h>
 #include "raylib.h"
+#include <cstdio>
+
 
 
 int main()
 {
     InitWindow(640, 480, "Raze");
+
+
     SetTargetFPS(60);
     //SetWindowPosition(400, 400);
 
