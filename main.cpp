@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "raylib.h"
+#include "raymath.h"
 #include <cstdio>
 
 
@@ -9,31 +10,39 @@ class Player
 public:
     float pos_x;
     float pos_y;
+    float speed = 200.0f;
+    Vector2 position = {0, 0};
+    Vector2 dir = {0,0};
 
     Player(float x, float y)
     {
         pos_x = x;
         pos_y = y;
+        position = {pos_x, pos_y};
+
+
     }
 
-    void update_pos()
+    void update_pose()
     {
-        if (IsKeyPressed(KEY_RIGHT))
-        {
-            pos_x += 5;
-        }
-        if (IsKeyPressed(KEY_LEFT))
-        {
-            pos_x -= 5;
-        }
-        if (IsKeyPressed(KEY_UP))
-        {
-            pos_y -= 5;
-        }
-        if (IsKeyPressed(KEY_DOWN))
-        {
-            pos_y += 5;
-        }
+        //normalize with respect to a potentially variable frame rate
+        float dt = GetFrameTime();
+        //dir holds direction vector
+        dir = {0};
+
+        //components of dir modified by keyboard inputs
+        if (IsKeyDown(KEY_D)) dir.x += 1.0f;
+        if (IsKeyDown(KEY_A)) dir.x -= 1.0f;
+        if (IsKeyDown(KEY_W)) dir.y -= 1.0f;
+        if (IsKeyDown(KEY_S)) dir.y += 1.0f;
+
+        //normalize the direction vector if there's input (avoids division by zero)
+        if (Vector2Length(dir) > 0.0f)
+            dir = Vector2Normalize(dir);
+
+        //declare a new position based on adding the dir vector to old position
+        position = Vector2Add(position, Vector2Scale(dir, (speed * dt)));
+
     }
 
 };
@@ -59,6 +68,10 @@ int main()
     Rectangle playerIdleRect = {32,48,32,48};
     Vector2 playerIdlePos = {playerObj.pos_x, playerObj.pos_y};
 
+    //unlock and enable mouse for player direction control
+    ShowCursor();
+    EnableCursor();
+
 
     //check if window is being created
     if (IsWindowReady()) printf("Window is Ok\n");
@@ -74,7 +87,7 @@ int main()
             ClearBackground(BLACK);
             DrawTexture(background, 0, 0, WHITE);
             DrawText("It Works!", 24, 24, 20, WHITE);
-            playerObj.update_pos();
+            playerObj.update_pose();
             playerIdlePos = {playerObj.pos_x, playerObj.pos_y};
             DrawTextureRec(player, playerIdleRect, playerIdlePos, WHITE);
         EndDrawing();
