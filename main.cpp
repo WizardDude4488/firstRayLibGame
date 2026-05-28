@@ -8,18 +8,18 @@
 class Player
 {
 public:
-    float pos_x;
-    float pos_y;
     float speed = 200.0f;
     Vector2 position = {0, 0};
     Vector2 dir = {0,0};
+    Vector2 mouse = GetMousePosition();
+    Vector2 origin = {16,24};
+    Rectangle dst = {position.x,position.y, 32,48};
+    Vector2 mouseDir = {0,0};
+    float angle = 0;
 
     Player(float x, float y)
     {
-        pos_x = x;
-        pos_y = y;
-        position = {pos_x, pos_y};
-
+        position = {x, y};
 
     }
 
@@ -43,6 +43,16 @@ public:
         //declare a new position based on adding the dir vector to old position
         position = Vector2Add(position, Vector2Scale(dir, (speed * dt)));
 
+        //update mouse, rects, etc.
+        mouse = GetMousePosition();
+        dst = {position.x, position.y, 32, 48};
+
+        //update rotation of player based on updated mouse and dst
+        mouseDir = Vector2Subtract(mouse, position);
+
+        //calculate a new angle for the player rectangle to rotate to
+        angle = atan2f(mouseDir.y, mouseDir.x) * RAD2DEG;
+        std::cout << angle << std::endl;
     }
 
 };
@@ -65,8 +75,7 @@ int main()
     Player playerObj(100, 100);
 
     Texture2D player = LoadTexture("players blue x3.png");
-    Rectangle playerIdleRect = {32,48,32,48};
-    Vector2 playerIdlePos = {playerObj.pos_x, playerObj.pos_y};
+    Rectangle playerIdleSrc = {32,48,32,48};
 
     //unlock and enable mouse for player direction control
     ShowCursor();
@@ -88,8 +97,7 @@ int main()
             DrawTexture(background, 0, 0, WHITE);
             DrawText("It Works!", 24, 24, 20, WHITE);
             playerObj.update_pose();
-            playerIdlePos = {playerObj.pos_x, playerObj.pos_y};
-            DrawTextureRec(player, playerIdleRect, playerIdlePos, WHITE);
+            DrawTexturePro(player, playerIdleSrc, playerObj.dst, playerObj.origin, playerObj.angle, WHITE);
         EndDrawing();
         //printf("After end drawing\n"); fflush(stdout);
     }
