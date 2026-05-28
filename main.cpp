@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <cstdio>
+#include <algorithm>
 
 
 class Player
@@ -15,6 +16,8 @@ public:
     Vector2 origin = {16,24};
     Rectangle dst = {position.x,position.y, 32,48};
     Vector2 mouseDir = {0,0};
+    Texture2D player = LoadTexture("images/players blue x3.png");
+    Rectangle playerIdleSrc = {32,48,32,48};
     float angle = 0;
 
     Player(float x, float y)
@@ -53,29 +56,34 @@ public:
         //calculate a new angle for the player rectangle to rotate to
         angle = atan2f(mouseDir.y, mouseDir.x) * RAD2DEG;
         std::cout << angle << std::endl;
+
+        //draw player
+        DrawTexturePro(player, playerIdleSrc, dst, origin, angle, WHITE);
     }
 
 };
 
+constexpr int Base_W = 1280;
+constexpr int Base_H = 720;
 
 int main()
 {
-    InitWindow(1366, 768, "Raze");
-
+    //make window resizable
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    InitWindow(Base_W, Base_H, "Raze");
 
     SetTargetFPS(60);
-    //SetWindowPosition(400, 400);
 
     //add the assets file directory to the project so we can use images, sounds, etc.
-
-    ChangeDirectory(TextFormat("%s/../assets/images", GetApplicationDirectory()));
-    Texture2D background = LoadTexture("john_xina.png");
+    ChangeDirectory(TextFormat("%s/../assets", GetApplicationDirectory()));
+    Texture2D background = LoadTexture("images/john_xina.png");
 
     //player
-    Player playerObj(100, 100);
+    Player playerObj(Base_W/2, Base_H/2);
+    Camera2D playerCamera = {};
+    playerCamera.zoom = 0.5f;
 
     Texture2D player = LoadTexture("players blue x3.png");
-    Rectangle playerIdleSrc = {32,48,32,48};
 
     //unlock and enable mouse for player direction control
     ShowCursor();
@@ -86,25 +94,51 @@ int main()
     if (IsWindowReady()) printf("Window is Ok\n");
     else printf("Window failed\n");
 
+    //canvas
+    RenderTexture2D canvas = LoadRenderTexture(Base_W, Base_H);
 
     //keep window open until user input tells game to close
     while (!WindowShouldClose()) {
 
-        //printf("Loop iteration\n"); fflush(stdout);
-        BeginDrawing();
-        //printf("After begin drawing\n"); fflush(stdout);
+        //Begin texture mode for drawing to canvas
+        BeginTextureMode(canvas);
+
+        //begin 2D mode with player camera
+        BeginMode2D(playerCamera);
             ClearBackground(BLACK);
             DrawTexture(background, 0, 0, WHITE);
             DrawText("It Works!", 24, 24, 20, WHITE);
+            playerCamera.target = playerObj.position;
+            playerCamera.offset = playerObj.position;
             playerObj.update_pose();
-            DrawTexturePro(player, playerIdleSrc, playerObj.dst, playerObj.origin, playerObj.angle, WHITE);
+        EndMode2D();
+        EndTextureMode();
+
+        float scale = std::min(
+            (float)GetScreenWidth()/Base_W,
+            (float)GetScreenHeight()/Base_H
+        );
+
+        float offsetX = (GetScreenWidth() - Base_W * scale) * 0.5f;
+        float offsetY = (GetScreenHeight() - Base_H * scale) * 0.5f;
+
+        Rectangle src = {0,0, Base_W, Base_H};
+        Rectangle dest = {offsetX, offsetY, Base_W * scale, Base_H * scale};
+
+        //Drawing segment
+        BeginDrawing();
+            //clear previous frame
+            ClearBackground(BLACK);
+            //draw stuff on canvas to the window
+            DrawTexturePro(canvas.texture, src, dest, {0,0}, 0.0f, WHITE);
         EndDrawing();
-        //printf("After end drawing\n"); fflush(stdout);
+
     }
 
     //add a for loop or a function to unload the textures
     UnloadTexture(background);
     UnloadTexture(player);
+    UnloadRenderTexture(canvas);
     CloseWindow();
     return 0;
 }
