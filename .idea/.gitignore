@@ -8,3 +8,6 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+#ignore the build folder, this will be rebuilt on each machine
+cmake-build-debug/
