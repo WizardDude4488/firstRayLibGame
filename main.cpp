@@ -104,6 +104,7 @@ int main()
 
     //add a for loop or a function to unload the textures
     UnloadTexture(background);
+    UnloadTexture(player);
     CloseWindow();
     return 0;
 }
