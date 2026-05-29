@@ -13,3 +13,5 @@ CMakeFiles/
 *.obj
 *.idea
 
+#prevents this from being committed
+/CMakeLists.txt
