@@ -1,0 +1,14 @@
+#Prevent these folders/files from being committed
+cmake-build-debug/
+cmake-build-release/
+
+#Cmake Cache
+CMakeLists.txt/
+CMakeFiles/
+
+#Prevent any files of these types from being committed
+*.exe
+*.lib
+*.dll
+*.obj
+
