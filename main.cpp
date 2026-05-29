@@ -104,14 +104,10 @@ int main()
         BeginTextureMode(canvas);
 
         //begin 2D mode with player camera
-        BeginMode2D(playerCamera);
             ClearBackground(BLACK);
             DrawTexture(background, 0, 0, WHITE);
             DrawText("It Works!", 24, 24, 20, WHITE);
-            playerCamera.target = playerObj.position;
-            playerCamera.offset = playerObj.position;
             playerObj.update_pose();
-        EndMode2D();
         EndTextureMode();
 
         float scale = std::min(
@@ -122,8 +118,8 @@ int main()
         float offsetX = (GetScreenWidth() - Base_W * scale) * 0.5f;
         float offsetY = (GetScreenHeight() - Base_H * scale) * 0.5f;
 
-        Rectangle src = {0,0, Base_W, Base_H};
-        Rectangle dest = {offsetX, offsetY, Base_W * scale, Base_H * scale};
+        Rectangle src = {0,0, (float)Base_W, -(float)Base_H};
+        Rectangle dest = {offsetX, offsetY, (float)Base_W * scale, (float)Base_H * scale};
 
         //Drawing segment
         BeginDrawing();
