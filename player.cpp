@@ -4,6 +4,7 @@
 
 /* (returntype) ClassName::MethodName(param1, param2, param3, etc.) { (implementation) }
 */
+//when implementing methods, you must restate the method parameters and make sure the data types match
 player::player(float x, float y)
 {
     position = {x, y};
@@ -47,8 +48,8 @@ void player::update_pose()
         dst = {position.x, position.y, 32, 48};
 
         //calculate difference vector from player render position to mouse screen position
-        screenPosition.x = GetScreenWidth()/2;
-        screenPosition.y = GetScreenHeight()/2;
+        screenPosition.x = float(GetScreenWidth())/2;
+        screenPosition.y = float(GetScreenHeight())/2;
         mouseDir = Vector2Subtract(mouse, screenPosition);
 
         //calculate a new angle for the player rectangle to rotate to
