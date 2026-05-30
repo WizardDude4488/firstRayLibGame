@@ -4,16 +4,22 @@
 #include "raymath.h"
 #include <cstdio>
 #include <algorithm>
+#include "projectVariables.h"
+#include "player.h"
+
+//initializing project scope variables
+//need to specify type when initializing
+float Base_W = 1280;
+float Base_H = 720;
 
 //creating variables here for global functionality
-float offsetX;
-float offsetY;
-
+float offsetX = 0;
+float offsetY = 0;
 float scale;
 
 Camera2D playerCamera = {};
 
-class Player
+/*class Player
 {
 public:
     float speed = 200.0f;
@@ -26,6 +32,7 @@ public:
     Texture2D player = LoadTexture("images/players blue x3.png");
     Rectangle playerIdleSrc = {32,48,32,48};
     float angle = 0;
+    Vector2 screenPosition = {Base_W/2, Base_H/2};
 
 
     Player(float x, float y)
@@ -55,15 +62,25 @@ public:
         position = Vector2Add(position, Vector2Scale(dir, (speed * dt)));
 
         //update mouse, rects, etc.
-        mouse = GetScreenToWorld2D(GetMousePosition(), playerCamera);
+        mouse = GetMousePosition();
+        //mouse = mouse + GetMouseDelta();
+
+        //first need to subtract the offsetx and offsety from the screen space coordinates
+        //then, need to multiply by scaling factor which is based on the render dimensions, not screen dimensions
+        //mouse.x = mouse.x - offsetX;
+        //mouse.x = mouse.x * (Base_W/GetRenderWidth());
+        //mouse.y = mouse.y - offsetY;
+        //mouse.y = mouse.y * (Base_H/GetRenderHeight());
 
         //adjust mouse position based on the offset of the screen
         //do this after GetScreenToWorld2D since the window offsets are calculated last
 
         dst = {position.x, position.y, 32, 48};
 
-        //update rotation of player based on updated mouse and dst
-        mouseDir = Vector2Subtract(mouse, position);
+        //calculate difference vector from player render position to mouse screen position
+        screenPosition.x = GetScreenWidth()/2;
+        screenPosition.y = GetScreenHeight()/2;
+        mouseDir = Vector2Subtract(mouse, screenPosition);
 
         //calculate a new angle for the player rectangle to rotate to
         angle = atan2f(mouseDir.y, mouseDir.x) * RAD2DEG;
@@ -75,10 +92,8 @@ public:
         DrawTexturePro(player, playerIdleSrc, dst, origin, angle, WHITE);
     }
 
-};
+}; */
 
-constexpr int Base_W = 1280;
-constexpr int Base_H = 720;
 
 int main()
 {
@@ -123,7 +138,7 @@ int main()
             DrawText("It Works!", 24, 24, 20, WHITE);
             playerObj.update_pose();
             playerCamera.target = playerObj.position;
-            playerCamera.offset = {Base_W/2, Base_H/2};
+            playerCamera.offset = {Base_W/2.0f, Base_H/2.0f};
         EndMode2D();
         EndTextureMode();
 
