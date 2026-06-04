@@ -1,5 +1,6 @@
 #pragma once
 #include "projectVariables.h"
+#include "collision.h"
 
 class player
 {
@@ -22,5 +23,9 @@ public:
     //don't want to do that since these are defined elsewhere
     player(float x, float y);
     void update_pose();
+
+    //initializing collider variables
+    Vector2 top_left = {0,playerIdleSrc.height};
+    Vector2 bottom_right = {playerIdleSrc.width, 0};
 
 };

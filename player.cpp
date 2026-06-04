@@ -8,6 +8,10 @@
 player::player(float x, float y)
 {
     position = {x, y};
+    collider(top_left, bottom_right);
+
+    //add player rect to rect_list upon construction
+    rect_list.push_back();
 }
 
 

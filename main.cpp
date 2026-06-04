@@ -7,17 +7,10 @@
 #include "projectVariables.h"
 #include "player.h"
 
-//initializing project scope variables
-//need to specify type when initializing
-float Base_W = 1280;
-float Base_H = 720;
-
 //creating variables here for global functionality
 float offsetX = 0;
 float offsetY = 0;
 float scale;
-
-Camera2D playerCamera = {};
 
 int main()
 {
