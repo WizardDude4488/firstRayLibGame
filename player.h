@@ -18,6 +18,9 @@ public:
     float angle = 0;
     Vector2 screenPosition = {Base_W/2, Base_H/2};
 
+    //rectangle for collision checking, etc.
+    Rectangle rect;
+
     //make sure not to put curly braces for header file definition
     //curly braces basically tell the compiler to expect a definition
     //don't want to do that since these are defined elsewhere

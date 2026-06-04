@@ -9,6 +9,6 @@ float Base_W = 1280;
 float Base_H = 720;
 
 //list of active rects
-//putting {} at the end of an std::vector<_Ty> is the same as initializing it as empty
+//putting {} at the end of a std::vector<_Ty> is the same as initializing it as empty
 //thus, only put {} when initializing, not defining
 std::vector<Rectangle> rect_list{};

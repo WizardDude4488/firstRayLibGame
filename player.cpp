@@ -9,9 +9,13 @@ player::player(float x, float y)
 {
     position = {x, y};
     collider(top_left, bottom_right);
+    Rectangle rect;
+    rect.x = position.x;
+    rect.y = position.y;
 
-    //add player rect to rect_list upon construction
-    rect_list.push_back();
+    //change this instantiation if using variable dimensions in future
+    rect.width = 32;
+    rect.height = 48;
 }
 
 
@@ -61,6 +65,10 @@ void player::update_pose()
         std::cout << angle << std::endl;
         //std::cout << mouseDir.x << std::endl;
         //std::cout << mouseDir.y << std::endl;
+
+        //update player rect for collision checking, etc.
+        rect.x = position.x;
+        rect.y = position.y;
 
         //draw player
         DrawTexturePro(playerTexture, playerIdleSrc, dst, origin, angle, WHITE);
