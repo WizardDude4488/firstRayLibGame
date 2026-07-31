@@ -20,10 +20,8 @@ Camera2D playerCamera;
 int main()
 {
     //make window resizable
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(Base_W, Base_H, "Raze");
+    //SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
-    SetTargetFPS(60);
 
     //add the assets file directory to the project so we can use images, sounds, etc.
     ChangeDirectory(TextFormat("%s/../assets", GetApplicationDirectory()));
@@ -36,12 +34,15 @@ int main()
     playerCamera.target = playerObj.position;
     playerCamera.zoom = 2.0f;
 
-    Texture2D player = LoadTexture("players blue x3.png");
+    Texture2D player = LoadTexture("images/players blue x3.png");
+
+    InitWindow(Base_W, Base_H, "Raze");
+
+    SetTargetFPS(60);
 
     //unlock and enable mouse for player direction control
     ShowCursor();
     EnableCursor();
-
 
     //check if window is being created
     if (IsWindowReady()) printf("Window is Ok\n");
@@ -49,10 +50,16 @@ int main()
 
     //canvas
     RenderTexture2D canvas = LoadRenderTexture(Base_W, Base_H);
-    SetTextureFilter(canvas.texture, TEXTURE_FILTER_TRILINEAR);
-
+    //SetTextureFilter(canvas.texture, TEXTURE_FILTER_TRILINEAR);
+    double frameTime = 0;
+    double lastFrameTime = 0;
+    double thisFrameTime = 0;
     //keep window open until user input tells game to close
     while (!WindowShouldClose()) {
+        thisFrameTime = GetTime();
+        frameTime = thisFrameTime - lastFrameTime;
+        std::cout << "\n" << frameTime;
+        lastFrameTime = GetTime();
 
         //Begin texture mode for drawing to canvas
         BeginTextureMode(canvas);
@@ -68,8 +75,8 @@ int main()
         EndTextureMode();
 
         scale = std::min(
-            (float)GetScreenWidth()/Base_W,
-            (float)GetScreenHeight()/Base_H
+            static_cast<float>(GetScreenWidth())/Base_W,
+            static_cast<float>(GetScreenHeight())/Base_H
         );
 
         offsetX = (GetScreenWidth() - Base_W * scale) * 0.5f;
@@ -85,6 +92,7 @@ int main()
             //draw stuff on canvas to the window
             DrawTexturePro(canvas.texture, src, dest, {0,0}, 0.0f, WHITE);
         EndDrawing();
+        printf("\nDrawing Finished.");
 
     }
 
