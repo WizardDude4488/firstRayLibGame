@@ -1,16 +1,21 @@
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
 #include <string>
+#include "player.h"
+#include "projectVariables.h"
 #include "raylib.h"
 #include "raymath.h"
-#include <cstdio>
-#include <algorithm>
-#include "projectVariables.h"
-#include "player.h"
 
 //creating variables here for global functionality
 float offsetX = 0;
 float offsetY = 0;
 float scale;
+
+float Base_W = 1920;
+float Base_H = 1080;
+
+Camera2D playerCamera;
 
 int main()
 {
@@ -27,6 +32,8 @@ int main()
     //player
     //make sure to exactly match the case of the header file name
     player playerObj(Base_W/2, Base_H/2);
+    playerCamera.offset = {Base_W/2, Base_H/2};
+    playerCamera.target = playerObj.position;
     playerCamera.zoom = 2.0f;
 
     Texture2D player = LoadTexture("players blue x3.png");

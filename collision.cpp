@@ -47,9 +47,8 @@ std::vector<bool> collision::check_collision(Rectangle receiver, Rectangle sende
 
 }
 
-void collision::collision_list()
-{
+//void check_collision_list(std::vector<bool> collider_list) {
 
-}
+//}
 
 

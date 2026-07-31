@@ -23,7 +23,7 @@ struct collider
 };
 
 //define a list of active rects for collision checking
-extern std::vector<bool> collider_list{};
+//extern std::vector<bool> collider_list{};
 
 
 class collision {
@@ -35,7 +35,7 @@ public:
     //should return the name of each rect and the collision list
     //for example, "player: {collision_right, collision_top}"
 
-    void check_collision_list(std::vector<bool> collider_list);
+    //void check_collision_list(std::vector<bool> collider_list);
 private:
     Rectangle collision_rect;
 };
